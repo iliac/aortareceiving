@@ -9,12 +9,10 @@ List of services that will be called on the AortaMessageBroker application:
 
  - Process Request - Task Management Application
    - Create a Process Request               POST   http://aorta:8141/api/processrequests/aeb7d11b-5588-4de7-822e-bd4a94da4df7
-   - Delete a Process Request               DELETE http://aorta:8141/api/processrequests/aeb7d11b-5588-4de7-822e-bd4a94da4df7
    - Update a Process Request               PUT    http://aorta:8141/api/processrequests/aeb7d11b-5588-4de7-822e-bd4a94da4df7
 
  - Tasks - Dynamic Scheduling Application
    - Create a Task                       POST   http://aorta:8121/api/tasks/a6baa2d8-03c8-4743-8f9a-ba633ba0d0e6
-   - Delete a Task                       DELETE http://aorta:8121/api/tasks/a6baa2d8-03c8-4743-8f9a-ba633ba0d0e6
    - Update a Task                       PUT    http://aorta:8121/api/tasks/a6baa2d8-03c8-4743-8f9a-ba633ba0d0e6
 
 ## Process Requests Collection [/api/processrequests]
@@ -31,12 +29,15 @@ Process Requests are used as input to create one or multiple tasks.
  - Third POST response: HTTP 1/1 404 Not Found, with specific body (see below). AortaMessageBroker was not able to correctly route the message.
  - Fourth POST response: HTTP 1/1 500 Internal Server Error, with specific body (see below). AortaMessageBroker was not able to correctly process the message.
 
-**DELETE requests**
- - First DELETE request: This message deletes a process request.
-
 **PUT requests**
- - Third PUT request: This message updates a process request.
+ - First PUT request: This message updates a process request.
  
+**PUT responses**
+ - First PUT response: HTTP 1/1 202 Accepted. AortaMessageBroker has been able to parse, route and distribute the message.
+ - Second PUT response: HTTP 1/1 400 Bad Request, with specific body (see below). AortaMessageBroker was not able to correctly parse the message.
+ - Third PUT response: HTTP 1/1 404 Not Found, with specific body (see below). AortaMessageBroker was not able to correctly route the message.
+ - Fourth PUT response: HTTP 1/1 500 Internal Server Error, with specific body (see below). AortaMessageBroker was not able to correctly process the message.
+
 ### Create a Process Request [POST]
 
 + Request (application/json)
@@ -302,13 +303,39 @@ Process Requests are used as input to create one or multiple tasks.
                 "AortaMessageBrokerInputResponse": "Server Error"
             }
 
-### Delete a Process Request [DELETE]
-
-+ Response 202 (application/json)
-
 ### Update a Process Request [PUT]
 
 + Response 202 (application/json)
+
+    + Body
+    
+            {
+                "AortaMessageBrokerInputResponse": "Accepted"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+    
+            {
+                "AortaMessageBrokerInputResponse": "Parsing Error"
+            }
+
++ Response 404 (application/json)
+
+    + Body
+    
+            {
+                "AortaMessageBrokerInputResponse": "Routing Error"
+            }
+
++ Response 500 (application/json)
+
+    + Body
+    
+            {
+                "AortaMessageBrokerInputResponse": "Server Error"
+            }
 
 ## Tasks Collection [/api/tasks]
 
@@ -323,12 +350,15 @@ The collection of messages that deals with Tasks. Tasks are actions that need to
  - Third POST response: HTTP 1/1 404 Not Found, with specific body (see below). AortaMessageBroker was not able to correctly route the message.
  - Fourth POST response: HTTP 1/1 500 Internal Server Error, with specific body (see below). AortaMessageBroker was not able to correctly process the message.
 
-**DELETE requests**
- - First DELETE request: This message deletes a task.
-
 **PUT requests**
  - First PUT request: This message updates a task.
  
+ **PUT responses**
+ - First PUT response: HTTP 1/1 202 Accepted. AortaMessageBroker has been able to parse, route and distribute the message.
+ - Second PUT response: HTTP 1/1 400 Bad Request, with specific body (see below). AortaMessageBroker was not able to correctly parse the message.
+ - Third PUT response: HTTP 1/1 404 Not Found, with specific body (see below). AortaMessageBroker was not able to correctly route the message.
+ - Fourth PUT response: HTTP 1/1 500 Internal Server Error, with specific body (see below). AortaMessageBroker was not able to correctly process the message.
+
 ### Create a Task [POST]
 
 + Request (application/json)
@@ -840,10 +870,6 @@ The collection of messages that deals with Tasks. Tasks are actions that need to
             {
                 "AortaMessageBrokerInputResponse": "Server Error"
             }
-
-### Delete a Task [DELETE]
-
-+ Response 202 (application/json)
 
 ### Update a Task [PUT]
 
